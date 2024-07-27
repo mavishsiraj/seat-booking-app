@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seat Booking</title>
+  <style>
+    .seat {
+      width: 50px;
+      height: 50px;
+      margin: 5px;
+      display: inline-block;
+      text-align: center;
+      vertical-align: middle;
+      line-height: 50px;
+      border: 1px solid #000;
+    }
+    .available {
+      background-color: grey;
+    }
+    .booked {
+      background-color: green;
+    }
+  </style>
+</head>
+<body>
+  <h1>Seat Booking</h1>
+  <div id="seatsContainer"></div>
+  <input type="text" id="name" placeholder="Your Name" required>
+  <p id="message"></p>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const seatsContainer = document.getElementById('seatsContainer');
+      const seats = [1, 2, 3, 4, 5, 6];
+      
+      seats.forEach(seat => {
+        const seatElement = document.createElement('div');
+        seatElement.className = 'seat available';
+        seatElement.innerText = seat;
+        seatElement.addEventListener('click', () => bookSeat(seat));
+        seatsContainer.appendChild(seatElement);
+      });
+
+      function bookSeat(seatNumber) {
+        const name = document.getElementById('name').value;
+        
+        if (!name) {
+          document.getElementById('message').innerText = 'Please enter your name.';
+          return;
+        }
+
+        axios.post('http://localhost:3000/user', { seat_number: seatNumber, name: name })
+          .then(response => {
+            document.getElementById('message').innerText = 'Booking successful!';
+            updateSeatStatus(seatNumber, true);
+          })
+          .catch(error => {
+            const errorMessage = error.response && error.response.data ? error.response.data : 'Booking failed: Unknown error';
+            document.getElementById('message').innerText = errorMessage;
+          });
+      }
+
+      function updateSeatStatus(seatNumber, booked) {
+        const seatElements = document.getElementsByClassName('seat');
+        Array.from(seatElements).forEach(seatElement => {
+          if (parseInt(seatElement.innerText) === seatNumber) {
+            seatElement.className = booked ? 'seat booked' : 'seat available';
+          }
+        });
+      }
+
+      function fetchBookings() {
+        axios.get('http://localhost:3000/user')
+          .then(response => {
+            const bookedSeats = response.data.map(booking => booking.seat_number);
+            bookedSeats.forEach(seatNumber => updateSeatStatus(seatNumber, true));
+          })
+          .catch(error => {
+            console.error('There was an error fetching the bookings!', error);
+          });
+      }
+
+      // Fetch bookings when the page loads
+      fetchBookings();
+    });
+  </script>
+</body>
+</html>
