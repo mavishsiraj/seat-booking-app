@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
@@ -35,7 +34,7 @@ userSchema.methods.comparePassword = function (candidatePassword) {
 };
 
 module.exports = mongoose.model("User", userSchema);
-=======
+
 const mongoose = require('mongoose');
 const bookSchema  = new mongoose.Schema({
     seat_number:{
@@ -54,4 +53,3 @@ const bookSchema  = new mongoose.Schema({
 })
 const book = new mongoose.model("book",bookSchema);
 module.exports = book;
->>>>>>> 946f0036a4f09f279ede8bb6faa27cbda6336eee

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const mongoose = require("mongoose");
 
 // Use environment variable for MongoDB URI, fallback to localhost for development
@@ -20,7 +19,7 @@ mongoose
   });
 
 module.exports = mongoose.connection;
-=======
+
 const mongoose = require('mongoose');
 
 // MongoDB connection URL
@@ -75,4 +74,3 @@ process.on('SIGINT', () => {
 		process.exit(0);
 	});
 });
->>>>>>> 946f0036a4f09f279ede8bb6faa27cbda6336eee
